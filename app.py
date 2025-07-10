@@ -28,7 +28,11 @@ def prediction():
 @app.route('/predict', methods=['GET','POST'])
 def predict():
     if request.method=="POST":
-        news = str(request.form['news'])
+        news = str(request.form['news']).strip()
+
+        if not news:
+            message = "Oops! It seems like you accidentally pressed analyze without entering a news article or headline. Please enter some text to analyze."
+            return render_template('result.html', prediction_text=message)
 
         prediction = model.predict(Vector.transform([news]))[0]
         label = "Real" if prediction == 1 else "Fake"
